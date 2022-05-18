@@ -1,6 +1,7 @@
 from canvasapi import Canvas
 import util
 import sys
+import pandas as pd
 
 def create_instance(API_URL, API_KEY):
     try:
