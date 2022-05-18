@@ -9,11 +9,12 @@
 ```
 API_TOKEN = ''
 API_INSTANCE = 'https://ubc.instructure.com'
+COURSE_ID = 
 ```
 
 #### Every Time
 
 1. Run:
-   1. navigate to your directory `$ cd YOUR_PATH/canvas-create-peer-reviews`
-   1. activate the environment (see step 3 on first run) `$ conda activate canvas-create-peer-reviews`
-   1. run the script and follow prompts in terminal `$ python src/canvas-create-peer-reviews.py`
+   1. navigate to your directory `$ cd YOUR_PATH/canvas-create-group-peer-reviews`
+   1. activate the environment (see step 3 on first run) `$ conda activate canvas-create-group-peer-reviews`
+   2. run the script and follow prompts in terminal `$ python src/canvas_create_peer_reviews.py`

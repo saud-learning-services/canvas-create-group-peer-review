@@ -7,7 +7,7 @@ load_dotenv()
 
 API_URL = os.getenv('API_URL')
 API_KEY = os.getenv('API_KEY')
-COURSE_ID = 10456
+COURSE_ID = os.getenv('COURSE_ID')
 
 if __name__ == "__main__":
     canvas = create_instance(API_URL, API_KEY)
