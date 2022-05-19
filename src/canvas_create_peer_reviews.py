@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv() 
 
 API_URL = os.getenv('API_URL')
-API_KEY = os.getenv('API_KEY')
+API_KEY = os.getenv('API_TOKEN')
 COURSE_ID = os.getenv('COURSE_ID')
 
 # TODO input n peer reviews
