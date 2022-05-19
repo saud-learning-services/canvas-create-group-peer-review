@@ -1,5 +1,5 @@
 from helpers import create_instance, _get_course
-from random_review_assignment import create_n_iterations
+from create_n_iterations import create_n_iterations
 import os
 from dotenv import load_dotenv
 
