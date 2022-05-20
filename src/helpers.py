@@ -2,6 +2,42 @@ from canvasapi import Canvas
 import util
 import sys
 import pandas as pd
+import ipywidgets as widgets
+from IPython.display import display
+
+def _create_dropdown(some_list):
+    w = widgets.Dropdown(
+        options=some_list,
+        description="Select value")
+    
+    output = widgets.Output()
+
+    def on_change(change):
+        global selected_val
+
+        if change['type'] == 'change' and change['name'] == 'value':
+            with output:
+                selected_val = w.value
+
+
+    w.observe(on_change)
+    display(w)
+
+def _matches_dict_key_val(dic, key, matches_val):
+    '''Returns the dictionary if the provided key matches the match_val
+    
+    parameters:
+        dic (dict)
+        key (string): the key string in the dict to find
+        matches_val (str|int): they str or int to try to find in the key
+
+    returns:
+        boolean
+    '''
+    # for use in list , example:
+    # [d for d in list if _matches_dict_id(d, "key", matches_val)]
+    return(dic[f"{key}"] == matches_val)
+
 
 def create_instance(API_URL, API_KEY):
     try:
