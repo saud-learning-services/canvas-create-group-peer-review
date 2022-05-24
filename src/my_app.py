@@ -5,10 +5,12 @@ import canvas_create_peer_reviews
 import helpers
 from helpers import _matches_dict_key_val
 
+
 # DASH
 from jupyter_dash import JupyterDash
 from dash import dcc, html, Input, Output
 from dash.dependencies import Input, Output
+from dash.exceptions import PreventUpdate
 
 KEY = canvas_create_peer_reviews.API_KEY
 URL = canvas_create_peer_reviews.API_URL
@@ -47,11 +49,20 @@ def my_app():
 
     app.layout = html.Div(children=[
         html.H1(children=f"{course.name}"),
-        drop_down_div(assignments_list, 'assignments-dropdown', 'dd-output-container'),
-        html.Br(),
-        drop_down_div(group_categories_list, 'group-categories-dropdown', 'dd-output-container2'),
-        html.Br(),
-        html.Div(id='all-output')
+
+        html.Div(children=[
+            html.H2("Part 1"),
+            drop_down_div(assignments_list, 'assignments-dropdown', 'dd-output-container'),
+            html.Br(),
+            drop_down_div(group_categories_list, 'group-categories-dropdown', 'dd-output-container2'),
+            html.Br(),
+            html.Div(id='all-output'),
+            html.Br(),
+            html.Button('Confirm Selection Above', id='show-secret')]),
+
+        html.Div(id="body-div", 
+            children=[])
+
     ])
 
     @app.callback(
@@ -64,6 +75,25 @@ def my_app():
         
         assignment_name = [d for d in assignments_list if _matches_dict_key_val(d, "value", assignmentval)][0].get('label')
         groupcategories_name = [d for d in group_categories_list if _matches_dict_key_val(d, "value", groupcategoriesval)][0].get('label')
+
+
+
+                
+
+        return html.Div(children=[html.H2(f'You have selected:'),
+                                html.Div(f'Assignment: {assignment_name} ({assignmentval})'), html.Br(),
+                                html.Div(f'Course Group:  {groupcategories_name} ({groupcategoriesval})')
+                                ])
+                               
+
+
+    @app.callback(
+        Output(component_id='body-div', component_property='children'),
+        Input(component_id='show-secret', component_property='n_clicks'),
+        Input('group-categories-dropdown', 'value')
+    )
+
+    def update_output(n_clicks, groupcategoriesval):
 
         def _get_group_members(groupcategoriesval):
             group_category = canvas.get_group_category(groupcategoriesval)
@@ -86,15 +116,12 @@ def my_app():
 
             return(groups_dict_list)
 
-                
+        if n_clicks is None:
+            raise PreventUpdate
 
-                
-
-        
-        return html.Div(children=[html.H2(f'You have selected:'),
-                                html.Div(f'Assignment: {assignment_name} ({assignmentval})'), html.Br(),
-                                html.Div(f'Course Group:  {groupcategories_name} ({groupcategoriesval})'),
-                                html.Div(f'{_get_group_members(groupcategoriesval)}')])
-
+        else:
+            return(html.Div(children=[
+                html.H2("Part 2"),
+                html.Div(f'{_get_group_members(groupcategoriesval)}')]))
 
     app.run_server(mode='inline')
