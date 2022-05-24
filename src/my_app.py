@@ -64,10 +64,37 @@ def my_app():
         
         assignment_name = [d for d in assignments_list if _matches_dict_key_val(d, "value", assignmentval)][0].get('label')
         groupcategories_name = [d for d in group_categories_list if _matches_dict_key_val(d, "value", groupcategoriesval)][0].get('label')
+
+        def _get_group_members(groupcategoriesval):
+            group_category = canvas.get_group_category(groupcategoriesval)
+            groups = group_category.get_groups()
+
+            groups_dict_list = []
+
+            for i in groups:
+                members = i.get_memberships()
+                members_list = []
+
+                for j in members:
+                    members_list.append(j.user_id)
+
+                group_dict = {'name': i.name,
+                'id': i.id, 
+                'members': members_list}
+
+                groups_dict_list.append(group_dict)
+
+            return(groups_dict_list)
+
                 
+
+                
+
         
         return html.Div(children=[html.H2(f'You have selected:'),
                                 html.Div(f'Assignment: {assignment_name} ({assignmentval})'), html.Br(),
-                                html.Div(f'Course Group:  {groupcategories_name} ({groupcategoriesval})')])
+                                html.Div(f'Course Group:  {groupcategories_name} ({groupcategoriesval})'),
+                                html.Div(f'{_get_group_members(groupcategoriesval)}')])
+
 
     app.run_server(mode='inline')
