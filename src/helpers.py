@@ -2,6 +2,66 @@ from canvasapi import Canvas
 import util
 import sys
 import pandas as pd
+import ipywidgets as widgets
+from IPython.display import display
+
+def _matches_dict_key_val(dic, key, matches_val):
+    '''Returns the dictionary if the provided key matches the match_val
+    
+    parameters:
+        dic (dict)
+        key (string): the key string in the dict to find
+        matches_val (str|int): they str or int to try to find in the key
+
+    returns:
+        boolean
+    '''
+    # for use in list , example:
+    # [d for d in list if _matches_dict_id(d, "key", matches_val)]
+    return(dic[f"{key}"] == matches_val)
+
+def __create_dicts(paginated_list):
+    '''Canvas objects are often paginated lists, return as a list of dictionaries'''
+    list_of_dicts = [i.__dict__ for i in paginated_list]
+    return(list_of_dicts)
+
+
+
+def create_group_category_dropdown(canvas, course):
+    
+    some_list = [(i.name, i.id) for i in course.get_group_categories()]
+    
+    w = widgets.Dropdown(
+        options=some_list,
+        description="Select value")
+    
+    global output
+    
+    output = widgets.Output()
+
+    def on_change(change):
+        global selected_val
+        global group_category
+        global groups
+
+        if change['type'] == 'change' and change['name'] == 'value':
+            output.clear_output()
+                
+            with output:
+                selected_val = w.value        
+                group_category = canvas.get_group_category(selected_val)
+                groups = group_category.get_groups()
+                
+                for i in groups:
+                    print(i.name)
+                    members = i.get_memberships()
+                    for j in members:
+                        print(j)
+                        
+    w.observe(on_change)
+    display(w)
+    display(output)
+
 
 def create_instance(API_URL, API_KEY):
     try:

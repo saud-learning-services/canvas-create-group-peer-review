@@ -1,12 +1,12 @@
 from helpers import create_instance, _get_course
-from random_review_assignment import create_n_iterations
+from create_n_iterations import create_n_iterations
 import os
 from dotenv import load_dotenv
 
 load_dotenv() 
 
-API_URL = os.getenv('API_URL')
-API_KEY = os.getenv('API_KEY')
+API_URL = os.getenv('API_INSTANCE')
+API_KEY = os.getenv('API_TOKEN')
 COURSE_ID = os.getenv('COURSE_ID')
 
 # TODO input n peer reviews

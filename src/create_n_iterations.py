@@ -21,7 +21,8 @@ def _compare_all_elements(manyLists, listLength):
     return(all(elementCompare))
 
 def _create_n_lists(originalList, n):
-    
+
+
     a = {}
     
     for i in range(n):
@@ -33,6 +34,19 @@ def _create_n_lists(originalList, n):
     return(a)
     
 def create_n_iterations(myList, n):
+    '''Given an original list of elements, creates n new orders where no nth element in the new lists matches that element in another. n must be lower than the number of elements in the originalList.
+
+    Parameters:
+    myList (list): any list of any length
+    n (int): the number of unique non-matching orders for the list
+
+    Returns:
+    a dictionary with list{n-1} and originalList
+    {'list0': ['j', 'k', 'i'],
+    'list1': ['k', 'i', 'j'],
+    'originalList': ['i', 'j', 'k']}
+    '''
+
     k = len(myList)
     
     if (n >= k):
