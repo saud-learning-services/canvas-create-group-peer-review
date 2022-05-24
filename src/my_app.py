@@ -62,12 +62,12 @@ def my_app():
 
     def update_output(assignmentval, groupcategoriesval):
         
-        assignment_name = [d for d in assignments_list if _matches_dict_key_val(d, "value", assignmentval)][0]
-        groupcategories_name = [d for d in group_categories_list if _matches_dict_key_val(d, "value", groupcategoriesval)][0]
+        assignment_name = [d for d in assignments_list if _matches_dict_key_val(d, "value", assignmentval)][0].get('label')
+        groupcategories_name = [d for d in group_categories_list if _matches_dict_key_val(d, "value", groupcategoriesval)][0].get('label')
                 
         
         return html.Div(children=[html.H2(f'You have selected:'),
-                                html.Div(f'Assignment: {assignmentval}, {assignment_name}'), html.Br(),
-                                html.Div(f'Course Group: {groupcategoriesval}, {groupcategories_name}')])
+                                html.Div(f'Assignment: {assignment_name} ({assignmentval})'), html.Br(),
+                                html.Div(f'Course Group:  {groupcategories_name} ({groupcategoriesval})')])
 
     app.run_server(mode='inline')

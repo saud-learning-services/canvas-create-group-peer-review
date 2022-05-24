@@ -1,0 +1,35 @@
+query MyQuery {
+  __typename
+  course(id: "10456") {
+    id
+    courseCode
+    assignmentsConnection {
+      nodes {
+        id
+        _id
+        name
+      }
+    }
+    groupSetsConnection {
+      nodes {
+        name
+        _id
+        groupsConnection {
+          nodes {
+            _id
+            name
+            membersCount
+            membersConnection {
+              nodes {
+                user {
+                  _id
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
