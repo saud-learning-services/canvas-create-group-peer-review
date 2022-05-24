@@ -26,6 +26,37 @@ def __create_dicts(paginated_list):
     return(list_of_dicts)
 
 
+def create_assignment_dropdown(course):
+    
+    some_list = [(i.name, i.id) for i in course.get_assignments()]
+    
+    x = widgets.Dropdown(
+        options=some_list,
+        description="Select value")
+    
+    global output
+    global assignment
+    
+    output = widgets.Output()
+
+    def on_change(change):
+        global selected_val
+        global assignment
+
+        if change['type'] == 'change' and change['name'] == 'value':
+            output.clear_output()
+                
+            with output:
+                selected_val = x.value        
+                assignment = course.get_assignment(selected_val)
+                print(assignment)
+
+
+
+    x.observe(on_change)
+    display(x)
+    display(output)
+    
 
 def create_group_category_dropdown(canvas, course):
     
@@ -35,7 +66,9 @@ def create_group_category_dropdown(canvas, course):
         options=some_list,
         description="Select value")
     
-    global output
+    global groups
+    global selected_val
+    global group_category
     
     output = widgets.Output()
 
