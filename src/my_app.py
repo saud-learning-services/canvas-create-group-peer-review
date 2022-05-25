@@ -2,7 +2,7 @@ import random
 import pandas as pd
 from canvasapi import Canvas
 import helpers
-from helpers import _return_single_dict_match
+from helpers import _return_single_dict_match, _simplify_group_dicts, _create_custom_group_html
 import json
 from initial_request import get_initial_info
 import os
@@ -69,61 +69,21 @@ def my_app():
         assignment_name = _return_single_dict_match(assignments_list, "value", assignmentval).get('label')
         groupcategories_name = _return_single_dict_match(group_sets_list, "value", groupcategoriesval).get('label')
 
+
+        # Matching and cleaning up groups
         matched_group_category = _return_single_dict_match(group_sets, "_id", groupcategoriesval) 
-        
-        def _simplify_group_dicts(matched_group_category):
-            some_list = []
-            for i in matched_group_category.get("groupsConnection").get("nodes"):
-                group_name = i.get('name')
-                members = i.get('membersConnection').get('nodes')
-                members_list = []
-
-                for j in members:
-                    member = j.get("user")
-                    member_dict = {
-                        "name": member.get("name"),
-                        "canvas_id": member.get("_id"),
-                        "sis_id": member.get("sisId")
-                    }
-                    members_list.append(member_dict)
-
-                new_dict = {
-                    "group_name": group_name,
-                    "members": members_list
-                }
-
-                some_list.append(new_dict)
-            
-            return(some_list)
-
-        some_list = _simplify_group_dicts(matched_group_category)
-
-        def _create_custom_html(some_list):
+        simple_groups_list = _simplify_group_dicts(matched_group_category)
+        group_children_html = _create_custom_group_html(simple_groups_list)
     
-            all_divs = []
-            
-            for i in some_list:
-                
-                new_div = html.Div(children= [
-                    html.H4(i.get('group_name')),
-                    html.Div(children = [
-                        html.P(f'{j.get("name")} ({j.get("canvas_id")})') for j in i.get('members')
-                    ])
-                ])
-                
-                all_divs.append(new_div)
-                
-            return(all_divs)
-            
-        group_children = _create_custom_html(some_list)
-    
+        # matching and cleaning up assignments 
         matched_assignment = _return_single_dict_match(assignments, "_id", assignmentval) 
+        matched_assignment_html = f'Set for Peer Reviews: {matched_assignment.get("peerReviews").get("enabled")}'
 
         return html.Div(children=[html.H2(f'You have selected:'),
                                 html.H3(f'Assignment: {assignment_name} ({assignmentval})'), 
-                                html.Div(f'Set for Peer Reviews: {matched_assignment.get("peerReviews").get("enabled")}'), html.Br(),
+                                html.Div(matched_assignment_html), html.Br(),
                                 html.H3(f'Course Group:  {groupcategories_name} ({groupcategoriesval})'),
-                                html.Div(children = group_children)
+                                html.Div(children = group_children_html)
                                 ])
                                
 

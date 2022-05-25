@@ -19,10 +19,54 @@ def _matches_dict_key_val(dic, key, matches_val):
     # for use in list , example:
     # [d for d in list if _matches_dict_id(d, "key", matches_val)]
     return(dic[f"{key}"] == matches_val)
-    
+
 def _return_single_dict_match(some_list, match_key, match_val):
             out = [d for d in some_list if _matches_dict_key_val(d, match_key, match_val)][0]
             return(out)
+
+  
+def _simplify_group_dicts(matched_group_category):
+    some_list = []
+    for i in matched_group_category.get("groupsConnection").get("nodes"):
+        group_name = i.get('name')
+        members = i.get('membersConnection').get('nodes')
+        members_list = []
+
+        for j in members:
+            member = j.get("user")
+            member_dict = {
+                "name": member.get("name"),
+                "canvas_id": member.get("_id"),
+                "sis_id": member.get("sisId")
+            }
+            members_list.append(member_dict)
+
+        new_dict = {
+            "group_name": group_name,
+            "members": members_list
+        }
+
+        some_list.append(new_dict)
+    
+    return(some_list)
+
+
+def _create_custom_group_html(some_list):
+
+    all_divs = []
+    
+    for i in some_list:
+        
+        new_div = html.Div(children= [
+            html.H4(i.get('group_name')),
+            html.Div(children = [
+                html.P(f'{j.get("name")} ({j.get("canvas_id")})') for j in i.get('members')
+            ])
+        ])
+        
+        all_divs.append(new_div)
+        
+    return(all_divs)
 
 def __create_dicts(paginated_list):
     '''Canvas objects are often paginated lists, return as a list of dictionaries'''
