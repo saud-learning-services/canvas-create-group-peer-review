@@ -4,7 +4,9 @@ from canvasapi import Canvas
 import canvas_create_peer_reviews
 import helpers
 from helpers import _matches_dict_key_val
+import json
 
+from initial_request import get_initial_info
 
 # DASH
 from jupyter_dash import JupyterDash
@@ -18,24 +20,13 @@ GRAPH_URL = f"{URL}/api/graphql"
 COURSEID = canvas_create_peer_reviews.COURSE_ID
 
 canvas = helpers.create_instance(URL, KEY)
-course = canvas.get_course(COURSEID)
-assignments = course.get_assignments()
-group_categories = course.get_group_categories()
+
+course, assignments, group_sets, users = get_initial_info(GRAPH_URL, COURSEID, KEY)
 
 def my_app():
 
-    assignments_list = [{'label': i.name, 'value': i.id} for i in assignments]
-    group_categories_list = [{'label': i.name, 'value': i.id} for i in group_categories]
-
-    def drop_down_div(list_of_dicts, dropdown_id, div_id):
-        first_value = list_of_dicts[0].get('value')
-        
-        html_div = html.Div([
-            dcc.Dropdown(options=list_of_dicts, value=first_value, id=dropdown_id),
-            html.Div(id=div_id)
-        ])
-        
-        return(html_div)
+    assignments_list = [{'label': i.get('name'), 'value': i.get('_id')} for i in assignments]
+    group_sets_list = [{'label': i.get('name'), 'value': i.get('_id')} for i in group_sets]
 
     def drop_down_div(list_of_dicts, dropdown_id, div_id):
         first_value = list_of_dicts[0].get('value')
@@ -50,17 +41,15 @@ def my_app():
     app = JupyterDash(__name__)
 
     app.layout = html.Div(children=[
-        html.H1(children=f"{course.name}"),
+        html.H1(children=f"{course.get('name')}"),
 
         html.Div(children=[
-            html.H2("Part 1"),
             drop_down_div(assignments_list, 'assignments-dropdown', 'dd-output-container'),
             html.Br(),
-            drop_down_div(group_categories_list, 'group-categories-dropdown', 'dd-output-container2'),
+            drop_down_div(group_sets_list, 'group-categories-dropdown', 'dd-output-container2'),
             html.Br(),
             html.Div(id='all-output'),
-            html.Br(),
-            html.Button('Confirm Selection Above', id='show-secret')]),
+            html.Br()]),
 
         html.Div(id="body-div", 
             children=[])
@@ -74,56 +63,23 @@ def my_app():
     )
 
     def update_output(assignmentval, groupcategoriesval):
-        
-        assignment_name = [d for d in assignments_list if _matches_dict_key_val(d, "value", assignmentval)][0].get('label')
-        groupcategories_name = [d for d in group_categories_list if _matches_dict_key_val(d, "value", groupcategoriesval)][0].get('label')
 
+        def _return_single_dict_match(some_list, match_key, match_val):
+            out = [d for d in some_list if _matches_dict_key_val(d, match_key, match_val)][0]
+            return(out)
 
+        assignment_name = _return_single_dict_match(assignments_list, "value", assignmentval).get('label')
+        groupcategories_name = _return_single_dict_match(group_sets_list, "value", groupcategoriesval).get('label')
 
-                
+        matched_group_category = _return_single_dict_match(group_sets, "_id", groupcategoriesval) 
+        matched_assignment = _return_single_dict_match(assignments, "_id", assignmentval) 
 
         return html.Div(children=[html.H2(f'You have selected:'),
-                                html.Div(f'Assignment: {assignment_name} ({assignmentval})'), html.Br(),
-                                html.Div(f'Course Group:  {groupcategories_name} ({groupcategoriesval})')
+                                html.H3(f'Assignment: {assignment_name} ({assignmentval})'), 
+                                html.Div(f'{matched_assignment}'), html.Br(),
+                                html.H3(f'Course Group:  {groupcategories_name} ({groupcategoriesval})'),
+                                html.Div(f'{matched_group_category}')
                                 ])
                                
-
-
-    @app.callback(
-        Output(component_id='body-div', component_property='children'),
-        Input(component_id='show-secret', component_property='n_clicks'),
-        Input('group-categories-dropdown', 'value')
-    )
-
-    def update_output(n_clicks, groupcategoriesval):
-
-        def _get_group_members(groupcategoriesval):
-            group_category = canvas.get_group_category(groupcategoriesval)
-            groups = group_category.get_groups()
-
-            groups_dict_list = []
-
-            for i in groups:
-                members = i.get_memberships()
-                members_list = []
-
-                for j in members:
-                    members_list.append(j.user_id)
-
-                group_dict = {'name': i.name,
-                'id': i.id, 
-                'members': members_list}
-
-                groups_dict_list.append(group_dict)
-
-            return(groups_dict_list)
-
-        if n_clicks is None:
-            raise PreventUpdate
-
-        else:
-            return(html.Div(children=[
-                html.H2("Part 2"),
-                html.Div(f'{_get_group_members(groupcategoriesval)}')]))
 
     app.run_server(mode='inline')

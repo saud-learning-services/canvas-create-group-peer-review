@@ -72,7 +72,7 @@ def get_initial_info(url, course_id, KEY):
     try:
         
         all_json = _get_query_by_course(url, query, course_id, KEY)
-        assignments = all_json['data']['course']['assignmentsConnection']
+        assignments = all_json['data']['course']['assignmentsConnection']['nodes']
         group_sets = all_json['data']['course']['groupSetsConnection']['nodes']
         course = { your_key: all_json['data']['course'][your_key] for your_key in ['_id', 'id', 'courseCode', 'name'] }
         users = all_json['data']['course']['usersConnection']['nodes']
