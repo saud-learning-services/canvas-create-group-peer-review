@@ -19,6 +19,10 @@ def _matches_dict_key_val(dic, key, matches_val):
     # for use in list , example:
     # [d for d in list if _matches_dict_id(d, "key", matches_val)]
     return(dic[f"{key}"] == matches_val)
+    
+def _return_single_dict_match(some_list, match_key, match_val):
+            out = [d for d in some_list if _matches_dict_key_val(d, match_key, match_val)][0]
+            return(out)
 
 def __create_dicts(paginated_list):
     '''Canvas objects are often paginated lists, return as a list of dictionaries'''
