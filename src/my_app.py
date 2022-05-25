@@ -14,7 +14,7 @@ from dash.exceptions import PreventUpdate
 
 KEY = canvas_create_peer_reviews.API_KEY
 URL = canvas_create_peer_reviews.API_URL
-COURSEID = 10456
+COURSEID = canvas_create_peer_reviews.COURSE_ID
 canvas = helpers.create_instance(URL, KEY)
 course = canvas.get_course(COURSEID)
 assignments = course.get_assignments()

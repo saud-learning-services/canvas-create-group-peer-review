@@ -15,4 +15,3 @@ dependencies:
       - canvasapi>=2.0.0
       - pick
       - jupyter-dash
-      - graphene
