@@ -21,8 +21,6 @@ def _compare_all_elements(manyLists, listLength):
     return(all(elementCompare))
 
 def _create_n_lists(originalList, n):
-
-
     a = {}
     
     for i in range(n):
@@ -68,6 +66,15 @@ def create_n_iterations(myList, n):
 
             if _compare_all_elements(listOfLists, k):
                 print(f"{i}: {listOfLists}")
+
+                evaluation_dicts = []
+                for i in zip(*listOfLists):
+                    j = list(i)
+                    first = j[0]
+                    rest = j[1:]
+
+                    new_dict = {first: rest} 
+                    evaluation_dicts.append(new_dict)
                 
-                return(listDict)
+                return(listDict, evaluation_dicts)
                 break   
