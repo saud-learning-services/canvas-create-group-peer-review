@@ -1,4 +1,4 @@
-name: canvas-create-group-peer-reviews
+name: canvas-create-group-peer-review
 channels:
   - conda-forge
   - anaconda
@@ -15,3 +15,4 @@ dependencies:
       - canvasapi>=2.0.0
       - pick
       - jupyter-dash
+      - dash
