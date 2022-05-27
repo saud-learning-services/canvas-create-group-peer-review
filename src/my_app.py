@@ -3,6 +3,7 @@ import pandas as pd
 from canvasapi import Canvas
 import helpers
 from helpers import _return_single_dict_match, _simplify_group_dicts, _create_custom_group_html
+from assign_peer_review_by_group import assign_peer_review_by_group
 import json
 from initial_request import get_initial_info
 import os
@@ -10,8 +11,8 @@ from dotenv import load_dotenv
 
 # DASH
 from jupyter_dash import JupyterDash
-from dash import dcc, html, Input, Output
-from dash.dependencies import Input, Output
+from dash import dcc, html
+from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
 load_dotenv() 
@@ -24,6 +25,7 @@ GRAPH_URL = f"{URL}/api/graphql"
 canvas = helpers.create_instance(URL, KEY)
 
 course, assignments, group_sets, users = get_initial_info(GRAPH_URL, COURSE_ID, KEY)
+_course = canvas.get_course(COURSE_ID)
 
 def my_app():
 
@@ -83,9 +85,42 @@ def my_app():
                                 html.H3(f'Assignment: {assignment_name} ({assignmentval})'), 
                                 html.Div(matched_assignment_html), html.Br(),
                                 html.H3(f'Course Group:  {groupcategories_name} ({groupcategoriesval})'),
-                                html.Div(children = group_children_html)
+                                html.Div(children = group_children_html),
+                                html.Div([
+                                    html.H3('Select number of reviews to assign'),
+                                    html.Div([
+                                        html.Div(dcc.Input(id='input-on-submit', type='number'), style={'display': 'inline-block'}),
+                                        html.Button('Assign Peer Reviews', id='submit-val', n_clicks=0, style={'display': 'inline-block'})
+                                        ]),
+                                    html.Div(id='container-button-basic',
+                                            children='Enter a value and press submit')
+                                            ])
                                 ])
-                               
+
+    @app.callback(
+        Output('container-button-basic', 'children'),
+        Input('submit-val', 'n_clicks'),
+        State('input-on-submit', 'value'),
+        Input('assignments-dropdown', 'value'),
+        Input('group-categories-dropdown', 'value')
+    )
+    
+    def update_output(n_clicks, value, assignment_select, group_select):
+
+        matched_group_category = _return_single_dict_match(group_sets, "_id", group_select) 
+        simple_groups_list = _simplify_group_dicts(matched_group_category)
+    
+        # matching and cleaning up assignments 
+        assignment = _course.get_assignment(assignment_select)
+        #matched_assignment = _return_single_dict_match(assignments, "_id", assignment_select) 
+
+        out = f"You chose to create {value} PRs for {assignment.name} within the group {matched_group_category.get('name')}"
+
+        if n_clicks >= 1:
+            assign_peer_review_by_group(assignment, simple_groups_list, value)
+
+        return(out)
+
 
 
     app.run_server(mode='inline')
