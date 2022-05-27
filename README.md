@@ -1,7 +1,7 @@
 # Canvas Create Group Peer Review
 > IN DEVELOPMENT!
-> "Works" - but does not handle errors well! Use at your discretion
-> Sharing in development phase in case useful to others. 
+> - "Works" - but does not handle errors well! Use at your discretion
+> - Sharing in development phase in case useful to others. 
 
 The jupyter notebook **dash-app.ipynb** allows the user to select an assignment, select canvas group sets and assigns X peer reviews. 
 
