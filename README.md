@@ -14,6 +14,8 @@ COURSE_ID =
 
 #### Every Time
 
+1. Update your .env file
+
 1. Run:
    1. navigate to your directory `$ cd YOUR_PATH/canvas-create-group-peer-reviews`
    1. activate the environment (see step 3 on first run) `$ conda activate canvas-create-group-peer-review`
