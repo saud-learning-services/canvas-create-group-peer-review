@@ -1,12 +1,12 @@
 import random
 import pandas as pd
 from canvasapi import Canvas
-import canvas_create_peer_reviews
 import helpers
-from helpers import _matches_dict_key_val
+from helpers import _return_single_dict_match, _simplify_group_dicts, _create_custom_group_html
 import json
-
 from initial_request import get_initial_info
+import os
+from dotenv import load_dotenv
 
 # DASH
 from jupyter_dash import JupyterDash
@@ -14,14 +14,16 @@ from dash import dcc, html, Input, Output
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 
-KEY = canvas_create_peer_reviews.API_KEY
-URL = canvas_create_peer_reviews.API_URL
+load_dotenv() 
+
+URL = os.getenv('API_INSTANCE')
+KEY = os.getenv('API_TOKEN')
+COURSE_ID = os.getenv('COURSE_ID')
 GRAPH_URL = f"{URL}/api/graphql"
-COURSEID = canvas_create_peer_reviews.COURSE_ID
 
 canvas = helpers.create_instance(URL, KEY)
 
-course, assignments, group_sets, users = get_initial_info(GRAPH_URL, COURSEID, KEY)
+course, assignments, group_sets, users = get_initial_info(GRAPH_URL, COURSE_ID, KEY)
 
 def my_app():
 
@@ -64,22 +66,26 @@ def my_app():
 
     def update_output(assignmentval, groupcategoriesval):
 
-        def _return_single_dict_match(some_list, match_key, match_val):
-            out = [d for d in some_list if _matches_dict_key_val(d, match_key, match_val)][0]
-            return(out)
-
         assignment_name = _return_single_dict_match(assignments_list, "value", assignmentval).get('label')
         groupcategories_name = _return_single_dict_match(group_sets_list, "value", groupcategoriesval).get('label')
 
+
+        # Matching and cleaning up groups
         matched_group_category = _return_single_dict_match(group_sets, "_id", groupcategoriesval) 
+        simple_groups_list = _simplify_group_dicts(matched_group_category)
+        group_children_html = _create_custom_group_html(simple_groups_list)
+    
+        # matching and cleaning up assignments 
         matched_assignment = _return_single_dict_match(assignments, "_id", assignmentval) 
+        matched_assignment_html = f'Set for Peer Reviews: {matched_assignment.get("peerReviews").get("enabled")}'
 
         return html.Div(children=[html.H2(f'You have selected:'),
                                 html.H3(f'Assignment: {assignment_name} ({assignmentval})'), 
-                                html.Div(f'{matched_assignment}'), html.Br(),
+                                html.Div(matched_assignment_html), html.Br(),
                                 html.H3(f'Course Group:  {groupcategories_name} ({groupcategoriesval})'),
-                                html.Div(f'{matched_group_category}')
+                                html.Div(children = group_children_html)
                                 ])
                                
+
 
     app.run_server(mode='inline')
