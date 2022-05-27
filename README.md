@@ -15,6 +15,7 @@ The jupyter notebook **dash-app.ipynb** allows the user to select an assignment,
 5. The peer review assignment is random, so when you run will be different each time
 
 ▶️ When you are ready select Kernel -> Restart & Run All.
+▶️ If you make any changes you need to Restart & Run All to refresh the data
 
 ## Getting Started
 ### Sauder Operations
