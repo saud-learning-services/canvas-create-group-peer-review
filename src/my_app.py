@@ -29,6 +29,8 @@ _course = canvas.get_course(COURSE_ID)
 
 def my_app():
 
+    peer_review_assignments = []
+
     assignments_list = [{'label': i.get('name'), 'value': i.get('_id')} for i in assignments]
     group_sets_list = [{'label': i.get('name'), 'value': i.get('_id')} for i in group_sets]
 
@@ -100,12 +102,12 @@ def my_app():
     @app.callback(
         Output('container-button-basic', 'children'),
         Input('submit-val', 'n_clicks'),
-        State('input-on-submit', 'value'),
         Input('assignments-dropdown', 'value'),
-        Input('group-categories-dropdown', 'value')
+        Input('group-categories-dropdown', 'value'),
+        State('input-on-submit', 'value'),
     )
     
-    def update_output(n_clicks, value, assignment_select, group_select):
+    def update_output(n_clicks, assignment_select, group_select, value):
 
         matched_group_category = _return_single_dict_match(group_sets, "_id", group_select) 
         simple_groups_list = _simplify_group_dicts(matched_group_category)

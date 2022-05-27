@@ -78,6 +78,7 @@ def assign_peer_review_by_group(assignment, simple_groups_list, n_reviews):
             print(f"{reviewee} will be reviewed by: {reviewers}")
 
             submission = _return_single_dict_match(submission_by_group, "user_id", reviewee)
+            
             try:
                 _assign_user_submission_reviews(submission, reviewers)
             except Exception as err:
