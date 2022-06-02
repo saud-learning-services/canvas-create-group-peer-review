@@ -37,6 +37,9 @@ API_TOKEN = ''
 API_INSTANCE = 'https://ubc.instructure.com'
 COURSE_ID = 
 ```
+Your .env file should be in this project folder.
+
+![image](https://user-images.githubusercontent.com/22600917/171711768-535fe292-2aef-4c32-8bc4-87788131a57a.png)
 
 #### Every Time
 
