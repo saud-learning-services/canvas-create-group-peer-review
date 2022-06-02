@@ -13,9 +13,11 @@ The jupyter notebook **dash-app.ipynb** allows the user to select an assignment,
 > Note: you must set N to at least 1 less than members in the groups
 4. ⚠️ Running this will **delete ALL current peer reviews** for the assignment (this cannot be undone)
 5. The peer review assignment is random, so when you run will be different each time
+6. The data for a course is pulled once, so you must Restart and Run All in Jupyter if any Canvas changes are made 
+>   ▶️ If you make any changes you need to select Kernel -> Restart & Run All to refresh the data
 
 ▶️ When you are ready select Kernel -> Restart & Run All.
-▶️ If you make any changes you need to Restart & Run All to refresh the data
+
 
 ## Getting Started
 ### Sauder Operations
