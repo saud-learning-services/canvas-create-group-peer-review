@@ -2,8 +2,15 @@ from helpers import _return_single_dict_match, _matches_dict_key_val_list
 from create_n_iterations import create_n_iterations
 
 
-def _delete_all_assignment_peer_reviews(assignment):
+def _delete_all_assignment_peer_reviews(assignment, users_to_delete=None):
     submissions = assignment.get_submissions()
+
+    def filter_to_users():
+        return
+
+    if users_to_delete:
+       # filter to submissions to delete
+       submissions =  filter_to_users()
     
     for i in submissions:
 
@@ -17,7 +24,6 @@ def _delete_all_assignment_peer_reviews(assignment):
     print(f"Deleted all peer reviews for {assignment.name}")
 
 def _assign_user_submission_reviews(submission, reviewers):
-    # remove any current reviews for submission
     # assign new reviews
     #submission = assignment.get_submission(reviewee)
     

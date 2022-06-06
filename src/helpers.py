@@ -36,9 +36,21 @@ def _matches_dict_key_val_list(dic, key, matches_val_list):
     # [d for d in list if _matches_dict_id(d, "key", matches_val)]
     return(dic[f"{key}"] in matches_val_list)
 
+def _filter_objects_to_list(original_list, dict_key, list_of_vals):
+    '''Returns a list of Canvas objects if there is a match in the dict_key to the 
+    list_of_vals
+    '''
+
+    new_list = []
+    for i in original_list:
+        if i.__dict__.get(dict_key) in list_of_vals:
+            new_list.append(i)
+            
+    return(new_list)
+
 def _return_single_dict_match(some_list, match_key, match_val):
-            out = [d for d in some_list if _matches_dict_key_val(d, match_key, match_val)][0]
-            return(out)
+        out = [d for d in some_list if _matches_dict_key_val(d, match_key, match_val)][0]
+        return(out)
 
   
 def _simplify_group_dicts(matched_group_category):
