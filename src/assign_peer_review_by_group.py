@@ -2,16 +2,21 @@ from helpers import _return_single_dict_match, _matches_dict_key_val_list
 from create_n_iterations import create_n_iterations
 
 
-def _delete_all_assignment_peer_reviews(assignment, users_to_delete=None):
+def _delete_submissions_peer_reviews(submissions):
+    for i in submissions:
+
+        submission_pr = i.get_submission_peer_reviews()
+
+        for j in submission_pr:
+
+            delete_reviewer = j.__dict__.get("assessor_id")
+            i.delete_submission_peer_review(delete_reviewer)
+            
+    print(f"Deleted subset of peer reviews")
+
+def _delete_all_assignment_peer_reviews(assignment):
     submissions = assignment.get_submissions()
 
-    def filter_to_users():
-        return
-
-    if users_to_delete:
-       # filter to submissions to delete
-       submissions =  filter_to_users()
-    
     for i in submissions:
 
         submission_pr = i.get_submission_peer_reviews()
@@ -56,10 +61,11 @@ def assign_peer_review_by_group(assignment, simple_groups_list, n_reviews):
     except Exception as err:
         print(f"Error getting submission details: {err}")
 
-    try:
-        _delete_all_assignment_peer_reviews(assignment)
-    except Exception as err:
-        print(f"Error in deleting current reviews: {err}")
+    #try:
+    #    _delete_all_assignment_peer_reviews(assignment)
+    #
+    #except Exception as err:
+    #    print(f"Error in deleting current reviews: {err}")
 
     
     for i in simple_groups_list: 

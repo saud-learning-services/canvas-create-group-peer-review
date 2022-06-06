@@ -77,6 +77,7 @@ def my_app():
         # Matching and cleaning up groups
         matched_group_category = _return_single_dict_match(group_sets, "_id", groupcategoriesval) 
         simple_groups_list = _simplify_group_dicts(matched_group_category)
+        print(simple_groups_list)
         group_children_html = _create_custom_group_html(simple_groups_list)
     
         # matching and cleaning up assignments 
