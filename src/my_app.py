@@ -2,7 +2,7 @@ import random
 import pandas as pd
 from canvasapi import Canvas
 import helpers
-from helpers import _return_single_dict_match, _simplify_group_dicts, _create_custom_group_html
+from helpers import _return_single_dict_match, _simplify_group_dicts, _create_custom_group_html, _get_all_group_users
 from assign_peer_review_by_group import assign_peer_review_by_group
 import json
 from initial_request import get_initial_info
@@ -77,7 +77,11 @@ def my_app():
         # Matching and cleaning up groups
         matched_group_category = _return_single_dict_match(group_sets, "_id", groupcategoriesval) 
         simple_groups_list = _simplify_group_dicts(matched_group_category)
+        users_in_group = _get_all_group_users(simple_groups_list)
         print(simple_groups_list)
+        print(users_in_group)
+
+
         group_children_html = _create_custom_group_html(simple_groups_list)
     
         # matching and cleaning up assignments 
@@ -112,6 +116,8 @@ def my_app():
 
         matched_group_category = _return_single_dict_match(group_sets, "_id", group_select) 
         simple_groups_list = _simplify_group_dicts(matched_group_category)
+
+
     
         # matching and cleaning up assignments 
         assignment = _course.get_assignment(assignment_select)

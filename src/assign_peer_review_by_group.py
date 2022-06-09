@@ -1,4 +1,5 @@
-from helpers import _return_single_dict_match, _matches_dict_key_val_list
+from helpers import _return_single_dict_match, _matches_dict_key_val_list, _get_all_group_users
+
 from create_n_iterations import create_n_iterations
 
 
@@ -75,6 +76,9 @@ def assign_peer_review_by_group(assignment, simple_groups_list, n_reviews):
             print(f"Accessing submissions for group: {i.get('group_name')}")
             group_users = [int(j.get("canvas_id")) for j in i.get("members")]
             submission_by_group = [j for j in submission_details if _matches_dict_key_val_list(j, "user_id", group_users)]
+
+            # delete peer reviews in group
+            print(submission_by_group)
         
         except Exception as err:
             print(f"Error in group {i.get('group_name')}: {err}")

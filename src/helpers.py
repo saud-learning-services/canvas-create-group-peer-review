@@ -78,6 +78,15 @@ def _simplify_group_dicts(matched_group_category):
     
     return(some_list)
 
+def _get_all_group_users(simple_groups_list):
+    members = []
+
+    for i in simple_groups_list:
+        group_members = [int(j.get("canvas_id")) for j in i.get("members")]
+        members.extend(group_members)
+    
+    return(members)
+
 
 def _create_custom_group_html(some_list):
 
