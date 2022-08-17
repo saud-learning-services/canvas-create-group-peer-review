@@ -1,13 +1,22 @@
 # Canvas Create Group Peer Review
 > IN DEVELOPMENT!
+> Questions? Ask Alison - alison.myers@sauder.ubc.ca
 > - "Works" - but does not handle errors well! Use at your discretion
-> - Sharing in development phase in case useful to others. 
+> - ⛔️ You cannot "undo" assignment of peer reviews! When you run the script it will delete any existing peer reviews even if there is an error (and no other peer reviews are assigned)
 
 The jupyter notebook **dash-app.ipynb** allows the user to select an assignment, select canvas group sets and assigns X peer reviews. 
 
 ## Important Notes
 
+
 1. You need to have created a .env file -> add your url, token, and course_id
+
+```
+API_TOKEN = ''
+API_INSTANCE = 'https://ubc.instructure.com'
+COURSE_ID = 
+```
+
 2. This process allows you to select an assignment and a group set from your course
 3. You can then N peer reviews that will be applied within the groups in the selected group set
 > Note: you must set N to at least 1 less than members in the groups
