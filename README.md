@@ -4,29 +4,44 @@
 > - "Works" - but does not handle errors well! Use at your discretion
 > - ⛔️ You cannot "undo" assignment of peer reviews! When you run the script it will delete any existing peer reviews even if there is an error (and no other peer reviews are assigned)
 
-The jupyter notebook **dash-app.ipynb** allows the user to select an assignment, select canvas group sets and assigns X peer reviews. 
+The jupyter notebook **dash-app.ipynb** allows the user to select an assignment, select canvas group sets and assigns X peer reviews.
 
 ## Important Notes
+⚠️ Running this will **delete ALL current peer reviews** for the assignment (this cannot be undone)
+
+The peer review assignment is random, so when you run will be different each time
+
+The data for a course is pulled once, so you must Restart and Run All in Jupyter if any Canvas changes are made 
+>   ▶️ If you make any changes you need to select Kernel -> Restart & Run All to refresh the data
 
 
-1. You need to have created a .env file -> add your url, token, and course_id
+## Input
+- Canvas Instance _(instance of Canvas being used - ex. https://ubc.instructure.com)_
+- Canvas API Token _(generate through Account => Settings)_
+- Course ID _(last digits of URL when visiting course page)_
+- Assignment Name _(the assignment to which group peer reviews will be assigned)_
+- Group Set Name _(the name of the Group Set that contains the groups within which the peer reviews will be assigned)_
+- N _(the number of peer reviews each group member should do)_
 
+
+## Instructions
+
+1. Create a .env file. Add your URL, token, and course id to the file.
 ```
 API_TOKEN = ''
 API_INSTANCE = 'https://ubc.instructure.com'
 COURSE_ID = 
 ```
-
-2. This process allows you to select an assignment and a group set from your course
-3. You can then N peer reviews that will be applied within the groups in the selected group set
-> Note: you must set N to at least 1 less than members in the groups
-4. ⚠️ Running this will **delete ALL current peer reviews** for the assignment (this cannot be undone)
-5. The peer review assignment is random, so when you run will be different each time
-6. The data for a course is pulled once, so you must Restart and Run All in Jupyter if any Canvas changes are made 
->   ▶️ If you make any changes you need to select Kernel -> Restart & Run All to refresh the data
+2. Choose the Assignment and the Group Set from two dropdown lists.
+3. Enter the number of peer reviews you want to assign to each member.
+   This number must be at least 1 less than the amount of members in the smallest group.
 
 ▶️ When you are ready select Kernel -> Restart & Run All.
 
+
+## Output
+
+On Canvas, the selected amount of peer reviews have been assigned within the chosen group set for the chosen assignment.
 
 ## Getting Started
 ### Sauder Operations
@@ -56,11 +71,11 @@ Your .env file should be in this project folder.
 
 1. Update your .env file
 
-1. Run:
+2. Run:
    1. navigate to your directory `$ cd YOUR_PATH/canvas-create-group-peer-reviews`
-   1. activate the environment (see step 3 on first run) `$ conda activate canvas-create-group-peer-review`
-   1. in terminal launch jupyter notebook `$ jupyter notebook dash-app.ipynb`
-   1. follow prompts in jupyter notebook 
+   2. activate the environment (see step 3 on first run) `$ conda activate canvas-create-group-peer-review`
+   3. in terminal launch jupyter notebook `$ jupyter notebook dash-app.ipynb`
+   4. follow prompts in jupyter notebook 
 
 ---
 _authors: @alisonmyers_
